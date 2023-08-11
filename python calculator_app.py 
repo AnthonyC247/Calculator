@@ -1,0 +1,64 @@
+import tkinter as tk
+
+class EvalExpression:
+    def evaluate(self, s: str) -> int:
+        operators = ['-','+','*','/']
+        operator_stack = []
+        operand_stack = []
+        result = 0
+        tracker = 0
+        i = 0
+        j = 0
+
+        while i < len(s):
+            if s[i] in operators:
+                if operator_stack:
+                    operand_stack.append(int(s[tracker:j]))
+
+                    while operator_stack and operators.index(s[i]) <= operators.index(operator_stack[-1]):
+                        num_1 = operand_stack.pop()
+                        num_2 = operand_stack.pop()
+                        sign = operator_stack.pop()
+
+                        if sign == '/':
+                            result = num_2 // num_1
+                        elif sign == '*':
+                            result = num_2 * num_1
+                        elif sign == '-':
+                            result = num_2 - num_1
+                        elif sign == '+':
+                            result = num_2 + num_1
+
+                        operand_stack.append(result)
+
+                    operator_stack.append(s[i])
+
+                else:
+                    operand_stack.append(int(s[tracker:j]))
+                    operator_stack.append(s[i])
+
+                tracker = j + 1
+                j = tracker
+            else:
+                j += 1
+            i += 1
+
+        operand_stack.append(int(s[tracker:j]))
+
+        while operator_stack:
+            num_1 = operand_stack.pop()
+            num_2 = operand_stack.pop()
+            sign = operator_stack.pop()
+
+            if sign == '/':
+                result = num_2 // num_1
+            elif sign == '*':
+                result = num_2 * num_1
+            elif sign == '-':
+                result = num_2 - num_1
+            elif sign == '+':
+                result = num_2 + num_1
+
+            operand_stack.append(result)
+
+        return operand_stack[0]
